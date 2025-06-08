@@ -7,9 +7,13 @@ import pandas as pd
 import numpy as np
 import os
 from datetime import datetime, timedelta
-import random
 
-def generate_patient_data(num_records=3500):
+# Configuration variables for easy modification
+DEFAULT_PATIENT_RECORDS = 3500
+DEFAULT_HOSPITAL_COUNT = 20
+MAX_HOSPITAL_COUNT = 50
+
+def generate_patient_data(num_records=DEFAULT_PATIENT_RECORDS):
     """
     Generate synthetic patient data.
     
@@ -34,12 +38,14 @@ def generate_patient_data(num_records=3500):
     genders = np.random.choice(['M', 'F'], size=num_records)
     
     # Hospital assignment (will match with hospital dataset)
-    hospital_ids = np.random.choice([f"H{i:03d}" for i in range(1, 21)], size=num_records)
+    hospital_ids = np.random.choice([f"H{i:03d}" for i in range(1, DEFAULT_HOSPITAL_COUNT + 1)], size=num_records)
     
     # Clinical data
     diagnoses = np.random.choice([
         'Diabetes', 'Heart Failure', 'Pneumonia', 'COPD', 
-        'Stroke', 'Kidney Disease', 'Cancer', 'Hypertension'
+        'Stroke', 'Kidney Disease', 'Cancer', 'Hypertension',
+        'Mental Health', 'Surgery', 'Infection', 'Fracture',
+        'Burn', 'Obesity', 'Injury', 'Rehabilitation'
     ], size=num_records)
     
     # Treatment data
@@ -59,8 +65,24 @@ def generate_patient_data(num_records=3500):
             treatments.append(np.random.choice(['Dialysis', 'Medication', 'Dietary Changes']))
         elif diagnosis == 'Cancer':
             treatments.append(np.random.choice(['Chemotherapy', 'Radiation', 'Surgery']))
-        else:  # Hypertension
+        elif diagnosis == 'Hypertension':
             treatments.append(np.random.choice(['ACE Inhibitors', 'Diuretics', 'Beta Blockers']))
+        elif diagnosis == 'Mental Health':
+            treatments.append(np.random.choice(['Psychotherapy', 'Antidepressants', 'Mood Stabilizers']))
+        elif diagnosis == 'Surgery':
+            treatments.append(np.random.choice(['Laparoscopic', 'Open Surgery', 'Minimally Invasive']))
+        elif diagnosis == 'Infection':
+            treatments.append(np.random.choice(['Antibiotics', 'Antiviral', 'Supportive Care']))
+        elif diagnosis == 'Fracture':
+            treatments.append(np.random.choice(['Cast', 'Surgery', 'Physical Therapy']))
+        elif diagnosis == 'Burn':
+            treatments.append(np.random.choice(['Wound Care', 'Skin Grafts', 'Pain Management']))
+        elif diagnosis == 'Obesity':
+            treatments.append(np.random.choice(['Diet Counseling', 'Bariatric Surgery', 'Exercise Program']))
+        elif diagnosis == 'Injury':
+            treatments.append(np.random.choice(['Emergency Care', 'Surgery', 'Rehabilitation']))
+        else:  # Rehabilitation
+            treatments.append(np.random.choice(['Physical Therapy', 'Occupational Therapy', 'Speech Therapy']))
     
     # Length of stay
     length_of_stay = np.random.lognormal(1.5, 0.5, num_records).astype(int)
@@ -114,7 +136,7 @@ def generate_patient_data(num_records=3500):
     
     return patient_data
 
-def generate_hospital_data(num_hospitals=20):
+def generate_hospital_data(num_hospitals=DEFAULT_HOSPITAL_COUNT):
     """
     Generate synthetic hospital data.
     
@@ -132,6 +154,7 @@ def generate_hospital_data(num_hospitals=20):
     
     hospital_ids = [f"H{i:03d}" for i in range(1, num_hospitals + 1)]
     
+    # Expanded hospital names (up to 50 hospitals)
     hospital_names = [
         "Memorial Hospital", "University Medical Center", "Community Hospital",
         "Regional Medical Center", "General Hospital", "St. Mary's Hospital",
@@ -139,9 +162,22 @@ def generate_hospital_data(num_hospitals=20):
         "Sacred Heart Hospital", "Providence Hospital", "Hope Medical Center",
         "Valley Hospital", "Riverside Medical Center", "Central Hospital",
         "Highland Hospital", "Lakeside Medical Center", "Summit Hospital",
-        "Oakwood Hospital", "Pinecrest Medical Center"
+        "Oakwood Hospital", "Pinecrest Medical Center", "Northside Hospital",
+        "Southside Medical Center", "Eastside Hospital", "Westside Medical Center",
+        "City General Hospital", "Suburban Medical Center", "Downtown Hospital",
+        "Uptown Medical Center", "Midtown Hospital", "Crossroads Medical Center",
+        "Parkview Hospital", "Hillcrest Medical Center", "Greenwood Hospital",
+        "Fairview Medical Center", "Sunset Hospital", "Sunrise Medical Center",
+        "Mountain View Hospital", "Ocean View Medical Center", "Forest Hills Hospital",
+        "Garden City Medical Center", "Spring Valley Hospital", "Winter Park Medical Center",
+        "Autumn Ridge Hospital", "Summer Heights Medical Center", "Crystal Lake Hospital",
+        "Golden Gate Medical Center", "Silver Creek Hospital", "Diamond Valley Medical Center",
+        "Emerald City Hospital", "Ruby Ridge Medical Center"
     ]
-    
+
+    # Select only the number of hospitals requested
+    selected_names = hospital_names[:num_hospitals]
+
     regions = np.random.choice(['Northeast', 'Southeast', 'Midwest', 'Southwest', 'West'], size=num_hospitals)
     
     hospital_types = np.random.choice(['Urban', 'Suburban', 'Rural'], 
@@ -166,17 +202,20 @@ def generate_hospital_data(num_hospitals=20):
     
     specialties = []
     for _ in range(num_hospitals):
-        num_specialties = np.random.randint(2, 6)
+        num_specialties = np.random.randint(3, 8)  # Increased range for more specialties
         specialty_list = np.random.choice([
-            'Cardiology', 'Oncology', 'Neurology', 'Orthopedics', 
-            'Pediatrics', 'Geriatrics', 'Pulmonology', 'Gastroenterology'
+            'Cardiology', 'Oncology', 'Neurology', 'Orthopedics',
+            'Pediatrics', 'Geriatrics', 'Pulmonology', 'Gastroenterology',
+            'Endocrinology', 'Psychiatry', 'Emergency Medicine', 'Surgery',
+            'Infectious Disease', 'Trauma Care', 'Burn Unit', 'Bariatric Surgery',
+            'Rehabilitation', 'Physical Therapy', 'Mental Health', 'Pain Management'
         ], size=num_specialties, replace=False)
         specialties.append(', '.join(specialty_list))
     
     # Create DataFrame
     hospital_data = pd.DataFrame({
         'hospital_id': hospital_ids,
-        'hospital_name': hospital_names,
+        'hospital_name': selected_names,
         'region': regions,
         'hospital_type': hospital_types,
         'bed_count': bed_counts,
@@ -193,9 +232,9 @@ def save_datasets():
     # Create data directory if it doesn't exist
     os.makedirs('./data', exist_ok=True)
 
-    # Generate datasets
-    patient_data = generate_patient_data(3500)
-    hospital_data = generate_hospital_data(20)
+    # Generate datasets using configuration variables
+    patient_data = generate_patient_data(DEFAULT_PATIENT_RECORDS)
+    hospital_data = generate_hospital_data(DEFAULT_HOSPITAL_COUNT)
 
     # Save to CSV
     patient_data.to_csv('./data/patient_data.csv', index=False)
