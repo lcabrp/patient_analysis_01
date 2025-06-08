@@ -192,3 +192,8 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+simple_test.py
+test_basic_functionality.py
+test_project.py
+verify_updates.py
