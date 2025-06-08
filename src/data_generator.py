@@ -175,8 +175,8 @@ def generate_hospital_data(num_hospitals=DEFAULT_HOSPITAL_COUNT):
         "Emerald City Hospital", "Ruby Ridge Medical Center"
     ]
 
-    # Select only the number of hospitals requested
-    selected_names = hospital_names[:num_hospitals]
+    # Randomly select hospital names without replacement
+    selected_names = np.random.choice(hospital_names, size=num_hospitals, replace=False) # No duplicates Hospitals
 
     regions = np.random.choice(['Northeast', 'Southeast', 'Midwest', 'Southwest', 'West'], size=num_hospitals)
     
