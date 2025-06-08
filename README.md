@@ -41,7 +41,7 @@ This project analyzes patient readmission rates and treatment effectiveness acro
    pip3 install -r requirements.txt
    ```
 
-4. Run the setup script to generate datasets and initialize the database:
+4. **IMPORTANT**: Run the setup script to generate datasets and initialize the database:
    ```bash
    # On Windows
    python setup_project.py
@@ -50,6 +50,8 @@ This project analyzes patient readmission rates and treatment effectiveness acro
    python3 setup_project.py
    ```
 
+   **This step is mandatory** - it creates the synthetic datasets that the analysis notebook requires.
+
 5. Launch Jupyter Notebook:
    ```bash
    jupyter notebook
@@ -57,19 +59,35 @@ This project analyzes patient readmission rates and treatment effectiveness acro
 
 6. Open the `healthcare_analysis.ipynb` notebook to view the analysis.
 
-### What to Expect
-After running the setup script, you will have:
-- Synthetic patient and hospital datasets in the `./data/` directory
-- A SQLite database (`healthcare_database.db`) with the processed data
-- All necessary files to run the complete analysis
+## Execution Order
 
-The main notebook will walk you through:
-- Data exploration and cleaning
-- Feature engineering
-- Database operations with SQL joins
-- Statistical analysis
-- Three different types of visualizations
-- Key insights and recommendations
+**⚠️ IMPORTANT: Follow this exact order:**
+
+1. **First**: Run `python3 setup_project.py`
+   - Generates synthetic patient and hospital datasets
+   - Saves raw data to `./data/` directory as CSV files
+
+2. **Second**: Open and run `healthcare_analysis.ipynb`
+   - Loads the pre-generated datasets
+   - Performs feature engineering (creates new columns)
+   - Creates SQLite database with the enhanced data
+   - Demonstrates SQL queries and statistical insights
+
+**Do NOT skip step 1** - the notebook expects the data files to exist and will show an error if they're missing.
+
+### What to Expect
+
+**After running `setup_project.py`:**
+- ✅ Synthetic patient and hospital datasets in the `./data/` directory
+- ✅ Raw CSV files ready for analysis
+
+**The analysis notebook will then:**
+- 📊 Load and explore the pre-generated datasets
+- 🧹 Perform data cleaning and validation
+- 🔧 Create new features through feature engineering
+- 🗄️ Create SQLite database and demonstrate SQL joins
+- 📈 Generate three different types of visualizations
+- 📋 Provide statistical analysis and business insights
 
 ## Technologies Used
 - **Python**: Core programming language for data analysis
@@ -83,7 +101,7 @@ This project uses two synthetic datasets:
 1. **Patient Records**: 3,500 records containing patient demographics, diagnoses, treatments, and readmission information
 2. **Hospital Information**: 20 records with details about hospitals, including size, location, and specialties
 
-The datasets are designed to simulate real-world healthcare data patterns while ensuring privacy and compliance. The data dictionary for each dataset is provided in the notebook.
+The datasets are designed to simulate real-world healthcare data patterns while ensuring privacy and compliance. The data uses a fixed random seed (42) to ensure reproducible results across different runs. The data dictionary for each dataset is provided in the notebook.
 
 ## Project Structure
 ```

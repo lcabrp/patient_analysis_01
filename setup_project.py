@@ -11,8 +11,6 @@ import sys
 sys.path.append('./src')
 
 from data_generator import save_datasets
-from db_utils import load_data_to_db
-import pandas as pd
 
 def main():
     """Initialize the healthcare analytics project."""
@@ -34,20 +32,14 @@ def main():
         print(f"❌ Error generating datasets: {e}")
         return False
     
-    # Load data into database
-    print("\n🗄️ Setting up SQLite database...")
-    try:
-        load_data_to_db(patient_data, hospital_data, 'healthcare_database.db')
-        print("✓ Database created and data loaded successfully")
-    except Exception as e:
-        print(f"❌ Error setting up database: {e}")
-        return False
+    # Note: Database will be created in the analysis notebook after feature engineering
     
-    print("\n🎉 Project setup completed successfully!")
+    print("\n🎉 Dataset generation completed successfully!")
     print("\nNext steps:")
     print("1. Open healthcare_analysis.ipynb in Jupyter Notebook")
     print("2. Run all cells to see the complete analysis")
-    print("3. Explore the generated visualizations and insights")
+    print("3. The notebook will create the database after feature engineering")
+    print("4. Explore the generated visualizations and insights")
     
     return True
 

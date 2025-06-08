@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 DEFAULT_PATIENT_RECORDS = 3500
 DEFAULT_HOSPITAL_COUNT = 20
 MAX_HOSPITAL_COUNT = 50
+RANDOM_SEED = 42  # Fixed seed for reproducible results
 
 def generate_patient_data(num_records=DEFAULT_PATIENT_RECORDS):
     """
@@ -28,7 +29,7 @@ def generate_patient_data(num_records=DEFAULT_PATIENT_RECORDS):
         DataFrame containing synthetic patient data
     """
     # Set random seed for reproducibility
-    np.random.seed(42)
+    np.random.seed(RANDOM_SEED)
     
     # Patient demographics
     patient_ids = [f"P{i:06d}" for i in range(1, num_records + 1)]
@@ -150,7 +151,7 @@ def generate_hospital_data(num_hospitals=DEFAULT_HOSPITAL_COUNT):
     pandas.DataFrame
         DataFrame containing synthetic hospital data
     """
-    np.random.seed(42)
+    np.random.seed(RANDOM_SEED)
     
     hospital_ids = [f"H{i:03d}" for i in range(1, num_hospitals + 1)]
     
