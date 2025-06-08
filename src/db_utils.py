@@ -62,7 +62,7 @@ def create_database(db_path='database.db'):
 def load_data_to_db(patient_data, hospital_data, db_path='database.db'):
     """
     Load data from DataFrames into SQLite database.
-    
+
     Parameters:
     -----------
     patient_data : pandas.DataFrame
@@ -73,21 +73,14 @@ def load_data_to_db(patient_data, hospital_data, db_path='database.db'):
         Path to the SQLite database file
     """
     conn = create_database(db_path)
-    
-    # Convert boolean columns to integers for SQLite compatibility
-    patient_data_copy = patient_data.copy()
-    patient_data_copy['readmitted'] = patient_data_copy['readmitted'].astype(int)
-    
-    hospital_data_copy = hospital_data.copy()
-    hospital_data_copy['is_teaching_hospital'] = hospital_data_copy['is_teaching_hospital'].astype(int)
-    
-    # Load data into tables
-    patient_data_copy.to_sql('patients', conn, if_exists='replace', index=False)
-    hospital_data_copy.to_sql('hospitals', conn, if_exists='replace', index=False)
-    
+
+    # Load data into tables directly (boolean columns already generated as 0/1)
+    patient_data.to_sql('patients', conn, if_exists='replace', index=False)
+    hospital_data.to_sql('hospitals', conn, if_exists='replace', index=False)
+
     conn.commit()
     conn.close()
-    
+
     print(f"Data loaded into database: {db_path}")
 
 def execute_query(query, db_path='database.db', params=None):

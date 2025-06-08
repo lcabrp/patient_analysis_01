@@ -78,8 +78,8 @@ def plot_los_vs_readmission(data):
     plt.xticks([0, 1], ['No', 'Yes'])
     
     # Add statistical annotation
-    not_readmitted = data[data['readmitted'] == False]['length_of_stay'].mean()
-    readmitted = data[data['readmitted'] == True]['length_of_stay'].mean()
+    not_readmitted = data[data['readmitted'] == 0]['length_of_stay'].mean()
+    readmitted = data[data['readmitted'] == 1]['length_of_stay'].mean()
     
     plt.annotate(f'Mean: {not_readmitted:.1f} days', xy=(0, not_readmitted), 
                  xytext=(0, not_readmitted + 2), ha='center',

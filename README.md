@@ -12,8 +12,8 @@ This project analyzes patient readmission rates and treatment effectiveness acro
 ### Installation Steps
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/healthcare-analytics.git
-   cd healthcare-analytics
+   git clone https://github.com/lcabrp/patient_analysis_01.git
+   cd patient_analysis_01
    ```
 
 2. Create and activate a virtual environment:

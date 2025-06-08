@@ -103,14 +103,14 @@ def generate_patient_data(num_records=DEFAULT_PATIENT_RECORDS):
         admission_dates.append(admission)
         discharge_dates.append(discharge)
     
-    # Readmission data
-    readmitted = np.random.choice([True, False], size=num_records, p=[0.18, 0.82])  # 18% readmission rate
+    # Readmission data (0 = False, 1 = True for database compatibility)
+    readmitted = np.random.choice([1, 0], size=num_records, p=[0.18, 0.82])  # 18% readmission rate
     
     readmission_days = []
     for readmit in readmitted:
-        if readmit:
+        if readmit == 1:  # If readmitted (1 = True)
             readmission_days.append(int(np.random.randint(1, 31)))  # Readmitted within 30 days
-        else:
+        else:  # If not readmitted (0 = False)
             readmission_days.append(None)
     
     # Insurance type
@@ -195,7 +195,8 @@ def generate_hospital_data(num_hospitals=DEFAULT_HOSPITAL_COUNT):
 
     staff_counts = [int(beds * np.random.uniform(3.5, 5.5)) for beds in bed_counts]
     
-    teaching_hospitals = np.random.choice([True, False], size=num_hospitals, p=[0.3, 0.7])
+    # Teaching hospital status (0 = False, 1 = True for database compatibility)
+    teaching_hospitals = np.random.choice([1, 0], size=num_hospitals, p=[0.3, 0.7])
     
     quality_scores = np.random.normal(3.5, 0.8, num_hospitals)
     quality_scores = np.clip(quality_scores, 1, 5).round(1)  # 1-5 scale, rounded to 1 decimal
