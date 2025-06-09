@@ -105,7 +105,8 @@ def generate_patient_data(num_records=DEFAULT_PATIENT_RECORDS):
         discharge_dates.append(discharge)
     
     # Readmission data (0 = False, 1 = True for database compatibility)
-    readmitted = np.random.choice([1, 0], size=num_records, p=[0.18, 0.82])  # 18% readmission rate
+    readmitted_rate = 0.08 # 8% readmission rate
+    readmitted = np.random.choice([1, 0], size=num_records, p=[readmitted_rate, 1 - readmitted_rate])
     
     readmission_days = []
     for readmit in readmitted:
